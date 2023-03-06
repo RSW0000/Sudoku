@@ -1,0 +1,198 @@
+General Information and Instructions
+------------------------------------
+
+(Note, this information in this document can also be displayed from the Sudoku Solver application by choosing the About SudokuSolver menu item from the File menu.)
+
+Sudoku Solver is an application that uses logic (rather than brute force trial and error) to solve Sudoku puzzles. The application consists of two windows:
+
+- The main game window displaying the puzzle grid and all of the user controls;
+- The Solve Notes window which displays in text format all of the steps in the
+  puzzle's solution.
+
+The user may also set certain display preferences and printing preferences by selecting the Preferences item in the Edit menu. In the preferences window, under the General tab are the following options:
+- The user can select the type of notation: RnCn, K9 or 9K, and for choices using
+  alphabetics, there is an option to use the letter 'J' instead of 'I' for the 9th
+  row or column.
+- 'Show candidate digits' enables or disables the display of pencil mark digits in
+  the puzzle grid.
+- When the PM (pencil mark) grid is printed in the solve notes, the Row ID can be
+  included or omitted from the left margin. Omitting it will make the PM grid
+  compatible with some Solvers in which a PM grid can be pasted.
+- When printing out a puzzle, there is an option to include Candidate Spots (standard
+  pencil marks), or exclusion ticks (the complement of pencil marks).
+
+The options under the Chains tab are discussed later in the AIC section.
+
+To enter a Sudoku puzzle, use the "Enter Puzzle" text field at the upper right of the game window, and enter the numbers, 9 per row in 9 rows. For blanks, use 0, ? or <space>. An example puzzle is preloaded to illustrate the format. You may also paste or drag-drop a puzzle from another application into the puzzle entry text field. If pasting or using the drag-drop feature, the application will recognize most text based puzzle formats and automatically format the puzzle correctly.
+
+Below the puzzle entry field are 4 buttons:
+
+- Load Puzzle
+- Solve
+- Solve Notes
+- PM Grid
+
+To load the puzzle from the puzzle entry text field into the main puzzle grid, click the 'Load Puzzle' button. This button will also reset any partially solved puzzles back to its initial unsolved state.
+
+The main puzzle grid (upper left of the game window) shows the original clues (in black) the solved values (in various colours according to the techniques used to solve the cell), and current candidates as pencil marks (a 3x3 grid of spots in telephone keypad order in the cell):
+
+➀ ➁ ➂
+➃ ➄ ➅
+➆ ➇ ➈
+
+To solve the puzzle, click the "Solve" button. The solver will use only the techniques that have been selected under the "Techniques" tab in the lower section of the window. These techniques are described later.
+
+If the Solve Notes window becomes covered by another applications window, clicking the "Solve Notes" button will bring it to the front.
+
+Clicking the "PM Grid" button will append a text format PM (pencil mark) grid of the current puzzle state to the solve notes.
+
+Below the buttons described above, are two check boxes:
+
+- Verbose
+- Log to File
+
+When "Verbose" is selected, it provides considerable detail for each step in the solve notes, intended to help beginners.
+
+When "Log to File" is selected and the Solve button is clicked, the text subsequently appearing in the solve notes window is exported to a text file.
+
+-----
+
+Many of the available strategies will not completely solve a cell, but will eliminate some candidate values from some cells which will aid in the eventual solution of the cells. The pencil marks indicate which candidates have been eliminated. If the mark is present then the digit is still a viable candidate. If missing, then the digit has been eliminated from the cell.
+
+The solver uses a number of different logic based solving strategies (selected under the "Techniques Tab"), all of which are performed automatically when the solve button is clicked, or individually when the corresponding buttons under the "Manual" tab are clicked. The techniques are described below.
+
+Basics
+======
+
+Naked Singles
+-------------
+
+This is the simplest strategy. The cell's row, column and 3x3 box are examined for digits already in use. If there is only a single digit found that is not in the row, column or box, then logically that is the only possibility for the cell, and the cell is filled in with that number. This strategy is repeated for each cell. Whenever a new cell is filled in, this may provide a solution to a previously examined cell.
+
+Hidden Singles
+--------------
+
+Knowing that each digit must appear exactly once in each row, column and box, each digit 1..9 is tried in each empty cell in a row (or column or box). If there is only one position where the digit will fit without violating the placement rules, then that must be  where the digit belongs, and it is entered into that cell. Unlike strategy 1, this strategy won't go back to the beginning and repeat, even if some cells are solved during the execution. Therefore you must click the Hidden Singles for each full iteration.
+
+Locked Sets
+-----------
+
+These patterns are commonly known as naked pairs, naked triples, etc. For naked pairs, if two cells in a row, column or box have only two candidates, and they are the same two candidates, then these two values must go in these two cells (though we don't know which order), and can be eliminated as possibilities from the remaining cells in the row, column or box. Likewise for naked triples, if three cells in a row, column or box can only have the same three candidates, then these candidates can be eliminated as possibilities from the remaining cells in the row, column or box. The same applies for 4's 5's etc. This elimination of candidates may not immediately solve a cell, but in combination with other strategies will aid in solving cells. 
+
+Box/Line Intersect
+------------------
+
+AKA Locked Candidates, Pointing, Claiming 
+
+For each row, and each unsolved digit in that row, cells are found which have the candidate digit, and then are checked to see if all of these cells are in the same box. If so, that digit can be removed as a candidate from all other cells in that box.
+Likewise, for each column, and each unsolved digit in that column, cells are found which have the candidate digit, and then are checked to see if all of these cells are in the same box. If so, that digit can be removed as a candidate from all other cells in that box.
+
+In reverse, for each box, and each unsolved digit in that box, cells are found which have the candidate digit, and then are checked to see if all of these cells are in the same row (or column). If so, that digit can be removed as a candidate from all other cells in that row (or column).
+
+Intermediate & Advanced Techniques
+==================================
+
+These strategies require more explanation than can be given here. For an in depth treatment, the following web pages are recommended:
+
+http://sudopedia.enjoysudoku.com/Terminology.html
+https://www.sudokuwiki.org/Strategy_Families
+https://hodoku.sourceforge.net/en/techniques.php
+
+The set of intermediate & advanced techniques provided are:
+
+- Wings (XY-wing and XYZ-wing)
+- Fish (X-wings, Swordfish, Jellyfish, etc., i.e. any n-fish where n=2..8) *See note below
+- Finned Fish (all finned and sashimi n-fish with no more than one fin)
+- BUG+1
+- Unique Rectangles
+- X-chains
+- XY-chains
+- AIC's (Alternating Inference Chains) a very general and powerful
+  chaining technique involving any strong links consisting of
+  X links, XY links, ALS links, UR links. *See note in the Manual Tab section
+- Nishio Net - a trial and error technique that looks for contradictions resulting
+  from the hypothesis that a certain digit is true (or false).
+- Junior Exocets
+
+*Note - Adjacent to the Fish checkbox is another checkbox labelled '➚'. This determines the search order for fish. When checked (the normal situation) the search begins with 2-Fish (X-wings) and works up to 3-Fish (swordfish), 4-fish, etc. If the box is unchecked, the search is done in decreasing order starting with 8-fish and working down. Working in decreasing order is only for interest sake, as each large fish (n>4) has a corresponding small fish with the same eliminations.
+
+The Tabbed Sections
+===================
+
+In the bottom portion of the game window is a tab panel containing various functions which are described below.
+
+The Puzzle Tab
+--------------
+
+Under this tab are some functions related to the puzzle as a whole:
+
+- Check Puzzle - This performs a brute force solve to determine if the puzzle is valid,
+  i.e., that it has exactly one valid solution. Since many invalid puzzles can have
+  thousands of solutions, the Max Solution Count text field allows the user to halt
+  the check when the count is reached. The default value is 2, as it only needs to find
+  two solutions to know that the puzzle is invalid. If the "Show Duplicate Solutions"
+  check box is checked, the found solutions are displayed in the Solve Notes window
+  in 1-line format.
+- Find Minimal - Checks the puzzle to see if it's minimal. If not, it attempts to find
+  the minimal clue set that still gives a valid puzzle.
+  WARNING!! the computation time increases exponentially with the number of clues that
+  may be removed to get to a minimal puzzle. If more than 8 clues can be removed,
+  computation time could be many hours.
+- Shuffle - Randomly shuffles the chutes in the puzzle, the rows/columns in the chutes,
+  and renumbers the clues to yield a different looking version of the same puzzle.
+  These changes only affect the puzzle in the puzzle entry field. When the Load Puzzle
+  button is clicked, the altered puzzle is then loaded into the puzzle grid.
+- Transpose - when selected, the Load puzzle button will load the puzzle from the 
+  puzzle entry field into the puzzle grid with rows and columns transposed.
+
+
+The Techniques Tab
+------------------
+
+Under this tab, the user can select the techniques that will be automatically applied when the Solve button is clicked. These techniques have been described above, except for the T&E options which are described here:
+
+- Enable - When selected, if the solver exhausts all selected techniques and fails to
+  solve the puzzle, the solver will select a cell elimination guess, and then recursively
+  attempt to solve the puzzle, adding more guesses each time the techniques are
+  exhausted without solution.
+- Find backdoor - If selected, the solver will use the above recursive techniques to find
+  a backdoor (a single cell solution that reduces the puzzle solution to singles).
+- Search Depth - The maximum depth of recursion allowed for finding a solution.
+- T&E Algorithm - Selects the algorithm that will be used to choose elimination
+  guesses. 
+
+
+The Manual Tab
+--------------
+
+Under this tab are a series of buttons which apply the individual techniques previously described in the Basics and Intermediate & Advanced Techniques sections. The buttons whose labels end with '!!' execute immediately, and may perform multiple eliminations each time the button is clicked. For buttons performing intermediate techniques, the label text ends with a single '!'. For these only a single elimination is performed, even if more of the same pattern exist. Clicking the button again will search for the next occurrence and perform its elimination.
+
+For buttons whose label text ends with '?', they will simply provide, in the solve notes, a numbered list of the patterns found. To accept any of these listed eliminations, enter its number into the Player input field, and click the appropriate manual method button a second time (not the Set Cell(s) button). The listed patterns are saved so that you can perform more eliminations later--even after other intervening operations--using the corresponding numbers.
+
+For Junior Exocets (JE's), clicking the button will find as many JE's as possible, and perform all of their eliminations, rather than stopping after the first. The JE Rules text field lists numbers 1..14 delimited by spaces. This is a list of elimination rules that will be performed if the JE is found. The numbers correspond to those defined by David P. Bird in his treatise on Exocets. His list stops at 12. However, two additional cases occur frequently enough that they are included here as rules 13 and 14. Note that rules 11 and 12 are included in the list, but they are not yet implemented. The JE solver only performs the eliminations listed in the JE Rules text field. Therefore any rule may be disabled by deleting its number from the JE Rules text field.
+
+
+The AIC function is not yet fully integrated into the solver. It will find and display valid AIC's in the Solve Notes window, but does not automatically apply them. (For this reason, the listed AIC's are unnumbered to avoid confusion.) The player must choose one of the displayed AIC's and copy the elimination(s), then paste them in to the Player Input text field at the bottom of the game window and click the "Set Cell(s)" button. For example, if the AIC function returns this AIC:
+
+ALS(124689)b1p12347 => (1)b1p7=(2)b1p3
+(7=4)r9c4-(4)r9c3=(4-2)r1c3==(1)r3c1-(1=7)r8c1 => -7r9c1 -7r8c46
+
+then copy "-7r9c1 -7r8c46" (the text after '=>') and paste it into the Player Input field. When the Set Cell(s) button is clicked the solver will record the move as:
+
+Player eliminated candidate 7 from cell r9c1
+Player eliminated candidate 7 from cell r8c4
+Player eliminated candidate 7 from cell r8c6
+Summary: -7r9c1 -7r8c46
+
+The AIC solver can find chains made from any strong links regardless of how they are derived. The usual types are X-links, Grouped X-links and XY-links, but strong links derived from Almost Locked Sets (ALS's) and Unique Rectangles are also used. The player can choose what type of strong links are used in building AIC's by setting options in the Preferences window (Edit menu -> Preferences) under the 'Chains' Tab. There are three types of ALS links. Type 1 is where the two strongly linked digits occur only once each in the ALS. Types 2a and 2b have multiple occurrences of one or more strongly linked digits. Typically, there will be a huge number 2a 2b ALS strong links which will have low probability of producing a chain giving any eliminations. But, because of the large number of them, they can significantly slow down the AIC finding function. It is recommended not to choose the 2a and 2b options if speed is important. With all ALS options selected, it may take the solver more than a minute to find all possible AIC's.
+
+When the AIC solver returns a chain that includes strong links derived from UR's or ALS's, the chain is displayed in two lines. The first line lists the respective UR or ALS strong links in the order in which they occur in the chain. The second line displays the AIC with '==' indicating the derived strong links.
+
+Below the AIC button is the '1 Step' checkbox. When this is checked, the AIC function will search only for AIC's whose eliminations reduce the puzzle to singles (or basics). It uses the antibackdoor function, described below, to search only for AIC's that produce eliminations that are Anti-backdoors. If the Anti-Backdoor search has already been run, then the AIC routine uses the existing list. If not, it will run the anti-backdoor routine to generate a simple list of 'stte' (singles to the end) anti-backdoors. If the 1 Step box is unchecked, the AIC routine will search for any AIC, but will prioritize anti-backdoor eliminations, and if any are found, it will stop at the point. Otherwise it will continue to search for any AIC that produces at least one elimination.
+
+Anti-Backdoors
+--------------
+
+This button does a search for single candidates that if eliminated will reduce the puzzle to a singles solution. The results of the search are displayed in the Solve Notes window. The small text field adjacent to the Anti-Backdoors button modifies the search. For normal operation the value should be 1. However the value may be changed to 2 or higher. When this is done, the search will look for combinations of n cells that when eliminated together will reduce the puzzle to singles.
+
+A third option is to set this text field to 0 or blank. In this case, instead of searching for anti-backdoors that yield singles solutions, it will search for anti-backdoors that will yield a solution involving the techniques selected under the Techniques tab. This is useful for finding 'btte' (basics to the end) solutions when the other anti-backdoor options fail to find any results. This search mode is considerably slower than the other ones, especially if more advanced techniques are selected.
